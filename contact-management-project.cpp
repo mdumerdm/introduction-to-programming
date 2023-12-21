@@ -1,8 +1,8 @@
 #include <iostream>
 #include <fstream>
 using namespace std;
-const int MAX_CONTACTS = 100;
-const string FILE_NAME = "contacts.txt";
+const int MAXCONTACTS = 100;
+const string FILENAME = "contacts.txt";
 
 struct Contact {
     string name;
@@ -10,11 +10,11 @@ struct Contact {
     string phoneNumber;
 };
 
-Contact contacts[MAX_CONTACTS];
+Contact contacts[MAXCONTACTS];
 int contactCount = 0;
 
 void saveContactsToFile() {
-    ofstream outFile(FILE_NAME);
+    ofstream outFile(FILENAME);
 
     for (int i = 0; i < contactCount; ++i) {
         outFile << contacts[i].name << ',' << contacts[i].email << ',' << contacts[i].phoneNumber << '\n';
@@ -24,16 +24,16 @@ void saveContactsToFile() {
 }
 
 void loadContactsFromFile() {
-    ifstream inFile(FILE_NAME);
+    ifstream inFile(FILENAME);
 
     if (!inFile.is_open()) {
         cout << "File not found. Creating a new file.\n";
         return;
     }
 
-    while (!inFile.eof() && contactCount < MAX_CONTACTS) {
+    while (!inFile.eof() && contactCount < MAXCONTACTS) {
         getline(inFile, contacts[contactCount].name, ',');
-       getline(inFile, contacts[contactCount].email, ',');
+        getline(inFile, contacts[contactCount].email, ',');
         getline(inFile, contacts[contactCount].phoneNumber, '\n');
 
         if (!contacts[contactCount].name.empty()) {
@@ -46,21 +46,21 @@ void loadContactsFromFile() {
 
 void displayMainMenu() {
     cout << "Main Menu:\n"
-                 "1. Add new contact\n"
-                 "2. View existing contacts\n"
-                 "3. Update contact information\n"
-                 "4. Delete Contact\n"
-                 "5. Managing File\n"
-                 "6. Quit\n"
-                 "Please select an option (1-6): ";
+         << "1. Add new contact\n"
+         << "2. View existing contacts\n"
+         << "3. Update contact information\n"
+         << "4. Delete Contact\n"
+         << "5. Managing File\n"
+         << "6. Quit\n"
+         << "Please select an option (1-6): ";
 }
 
 void addContact() {
     cin.ignore(); // Clear the newline character from the buffer
-    if (contactCount < MAX_CONTACTS) {
+    if (contactCount < MAXCONTACTS) {
         cout << "\nAdding a contact:\nEnter the following information:\n";
         cout << "Name: ";
-        getline(std::cin, contacts[contactCount].name);
+        getline(cin, contacts[contactCount].name);
         cout << "Email: ";
         getline(cin, contacts[contactCount].email);
         cout << "Phone Number: ";
@@ -79,7 +79,7 @@ void viewContacts() {
 
     for (int i = 0; i < contactCount; ++i) {
         cout << "Name: " << contacts[i].name << "\tPhone: " << contacts[i].phoneNumber
-                  << "\tEmail: " << contacts[i].email << "\n";
+             << "\tEmail: " << contacts[i].email << "\n";
     }
 
     cout << "\n1. Back to Main Menu\n";
@@ -96,11 +96,11 @@ void updateContact() {
         if (contacts[i].name == searchName) {
             cout << "Enter the new information:\n";
             cout << "Name: ";
-            getline(std::cin, contacts[i].name);
+            getline(cin, contacts[i].name);
             cout << "Email: ";
-            getline(std::cin, contacts[i].email);
+            getline(cin, contacts[i].email);
             cout << "Phone Number: ";
-            getline(std::cin, contacts[i].phoneNumber);
+            getline(cin, contacts[i].phoneNumber);
 
             cout << "Contact updated successfully!\n";
             found = true;
@@ -110,6 +110,54 @@ void updateContact() {
 
     if (!found) {
         cout << "Contact not found.\n";
+    }
+}
+
+void deleteContact() {
+    string searchName;
+    cin.ignore(); // Clear the newline character from the buffer
+    cout << "\nDeleting a contact:\nEnter the contact name to delete: ";
+    getline(cin, searchName);
+
+    bool found = false;
+    for (int i = 0; i < contactCount; ++i) {
+        if (contacts[i].name == searchName) {
+            // Shift elements to fill the gap
+            for (int j = i; j < contactCount - 1; ++j) {
+                contacts[j] = contacts[j + 1];
+            }
+            --contactCount;
+
+            cout << "Contact deleted successfully!\n";
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        cout << "Contact not found.\n";
+    }
+}
+
+void manageFile() {
+    int fileOption;
+    cout << "\nManaging File:\n"
+         << "1. Save contacts to file\n"
+         << "2. Load contacts from file\n"
+         << "Please select an option (1-2): ";
+    cin >> fileOption;
+
+    switch (fileOption) {
+        case 1:
+            saveContactsToFile();
+            cout << "Contacts saved to file.\n";
+            break;
+        case 2:
+            loadContactsFromFile();
+            cout << "Contacts loaded from file.\n";
+            break;
+        default:
+            cout << "Invalid option.\n";
     }
 }
 
@@ -132,8 +180,12 @@ int main() {
             case 3:
                 updateContact();
                 break;
-            // Add cases for other options (4. Save contacts to file, 5. Load contacts from file, 6. Quit)
-
+            case 4:
+                deleteContact();
+                break;
+            case 5:
+                manageFile();
+                break;
             case 6:
                 saveContactsToFile();
                 cout << "Quitting the address book.\n";
@@ -146,3 +198,4 @@ int main() {
 
     return 0;
 }
+
