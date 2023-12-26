@@ -1,0 +1,79 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+const int Ts = 4;
+const int TSi = 5;
+const int I = 20;
+const int E = 5;
+
+int main() {
+    int TESc[20];
+    int IESc[100];
+    int n = 0;
+    int m = 0;
+    int choice;
+
+    cout << "Do you want to enter scores for teams (1) or individuals (2)? ";
+    cin >> choice;
+
+    if (choice == 1) {
+        for (int i = 0; i < E; i++) {
+            for (int j = 0; j < Ts; j++) {
+                int rank;
+                cout << "Enter rank for team " << j + 1 << " in event " << i + 1 << " (1 to 4, enter 0 to skip): ";
+                cin >> rank;
+
+                // Skip participants with rank 0
+                if (rank != 0) {
+                    TESc[n] = rank;
+                    n++;
+                }
+            }
+        }
+
+        // Calculate and display total points for teams
+        int totalTeamPoints[Ts] = {0};
+        for (int i = 0; i < n; i++) {
+            // Adjust scoring for teams: rank 1 gets 20, rank 4 gets 5
+            totalTeamPoints[i % Ts] += (20 - (TESc[i] - 1) * 5);
+        }
+
+        cout << "\nTotal Points for Teams:\n";
+        for (int i = 0; i < Ts; i++) {
+            cout << "Team " << i + 1 << ": " << totalTeamPoints[i] << " points\n";
+        }
+    } else if (choice == 2) {
+        for (int i = 0; i < E; i++) {
+            for (int j = 0; j < I; j++) {
+                int rank;
+                cout << "Enter rank for individual " << j + 1 << " in event " << i + 1 << " (1 to 20, enter 0 to skip): ";
+                cin >> rank;
+
+                // Skip participants with rank 0
+                if (rank != 0) {
+                    IESc[m] = rank;
+                    m++;
+                }
+            }
+        }
+
+        // Calculate and display total points for individuals
+        int totalIndividualPoints[I] = {0};
+        for (int i = 0; i < m; i++) {
+            // Adjust scoring for individuals: rank 1 gets 100, rank 20 gets 5
+            totalIndividualPoints[i % I] += (100 - (IESc[i] - 1) * 5);
+        }
+
+        cout << "\nTotal Points for Individuals:\n";
+        for (int i = 0; i < I; i++) {
+            cout << "Individual " << i + 1 << ": " << totalIndividualPoints[i] << " points\n";
+        }
+    } else {
+        cout << "Invalid choice. Exiting program." << endl;
+        return 1;
+    }
+
+    return 0;
+}
