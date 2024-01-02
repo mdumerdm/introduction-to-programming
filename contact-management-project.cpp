@@ -194,7 +194,7 @@ int main() {
                 cout << "Invalid choice. Please try again.\n";
         }
 
-    } while (choice != 6);
+    } while (choice>=1&&choice<=5);
 
     return 0;
 }
